@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Bracelet Control</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+      background: #1a1a2e;
+      color: white;
+    }
+    h1 { margin-bottom: 40px; }
+    button {
+      padding: 20px 40px;
+      font-size: 1.2rem;
+      background: #e94560;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: transform 0.1s, background 0.2s;
+    }
+    button:hover { background: #c73652; }
+    button:active { transform: scale(0.96); }
+    #status {
+      margin-top: 20px;
+      font-size: 0.9rem;
+      opacity: 0.7;
+    }
+  </style>
+</head>
+<body>
+  <h1>⚡ Bracelet</h1>
+  <button onclick="sendShock()">Send Shock</button>
+  <p id="status"></p>
+
+  <script>
+    const AIO_USERNAME = "your_adafruit_username";
+    const AIO_KEY      = "your_adafruit_io_key";
+    const FEED         = "shock";
+
+    async function sendShock() {
+      document.getElementById("status").textContent = "Sending...";
+      try {
+        const res = await fetch(
+          `https://io.adafruit.com/api/v2/${AIO_USERNAME}/feeds/${FEED}/data`,
+          {
+            method: "POST",
+            headers: {
+              "X-AIO-Key": AIO_KEY,
+              "Content-Type": "application/json"
+            },
+            body: JSON.stringify({ value: "1" })
+          }
+        );
+        if (res.ok) {
+          document.getElementById("status").textContent = "✓ Sent!";
+        } else {
+          document.getElementById("status").textContent = "✗ Failed — check your AIO key";
+        }
+      } catch (e) {
+        document.getElementById("status").textContent = "✗ Network error";
+      }
+    }
+  </script>
+</body>
+</html>
