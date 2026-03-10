@@ -37,33 +37,24 @@
   </style>
 </head>
 <body>
-  <h1>.</h1>
+  <h1>Bracelet</h1>
   <button onclick="sendShock()">Send Shock</button>
   <p id="status"></p>
 
   <script>
-    const AIO_USERNAME = "brokentoaster";
-    const AIO_KEY      = "aio_KlQM887itmDjXTuvhdiRRSWdvR2z";
-    const FEED         = "shock";
+    const TOPIC = "toasterssupersecretawesomeshockcollar"; // change this to something unique
 
     async function sendShock() {
       document.getElementById("status").textContent = "Sending...";
       try {
-        const res = await fetch(
-          `https://io.adafruit.com/api/v2/${AIO_USERNAME}/feeds/${FEED}/data`,
-          {
-            method: "POST",
-            headers: {
-              "X-AIO-Key": AIO_KEY,
-              "Content-Type": "application/json"
-            },
-            body: JSON.stringify({ value: "1" })
-          }
-        );
+        const res = await fetch(`https://ntfy.sh/${TOPIC}`, {
+          method: "POST",
+          body: "shock"
+        });
         if (res.ok) {
           document.getElementById("status").textContent = "✓ Sent!";
         } else {
-          document.getElementById("status").textContent = "✗ Failed — check your AIO key";
+          document.getElementById("status").textContent = "✗ Failed";
         }
       } catch (e) {
         document.getElementById("status").textContent = "✗ Network error";
@@ -71,8 +62,4 @@
     }
   </script>
 </body>
-
 </html>
-
-
-
